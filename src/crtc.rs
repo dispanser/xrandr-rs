@@ -1,14 +1,14 @@
+use crate::screen_resources::ScreenResourcesHandle;
+use crate::XHandle;
 use crate::XId;
 use crate::XTime;
-use crate::CURRENT_TIME;
-use crate::XHandle;
 use crate::XrandrError;
-use crate::screen_resources::ScreenResourcesHandle;
+use crate::CURRENT_TIME;
 use std::ptr;
 use std::slice;
 
-use x11::xrandr;
 use std::convert::TryFrom;
+use x11::xrandr;
 
 // A Crtc can display a mode in one of 4 rotations
 #[derive(PartialEq, Eq, Copy, Debug, Clone)]
@@ -63,7 +63,7 @@ pub struct Crtc {
 
 /// Normalizes a set of Crtcs by making sure the top left pixel of the screen
 /// is at (0,0). This is needed after changing positions/rotations.
-pub(crate) fn normalize_positions(crtcs: &mut Vec<Crtc>) {
+pub(crate) fn normalize_positions(crtcs: &mut [Crtc]) {
     if crtcs.is_empty() {
         return;
     };

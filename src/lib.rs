@@ -1,10 +1,10 @@
+use itertools::EitherOrBoth as ZipEntry;
+use itertools::Itertools;
 use std::collections::HashMap;
 use std::ffi::CStr;
 use std::fmt::Debug;
 use std::os::raw::c_ulong;
 use std::ptr;
-use itertools::Itertools;
-use itertools::EitherOrBoth as ZipEntry;
 
 use crtc::normalize_positions;
 pub use indexmap;
@@ -13,13 +13,13 @@ use thiserror::Error;
 use x11::{xlib, xrandr};
 
 pub use crate::crtc::Crtc;
-pub use crate::crtc::{Rotation, Relation};
+pub use crate::crtc::{Relation, Rotation};
 pub use crate::mode::Mode;
-pub use crate::screensize::ScreenSize;
 pub use crate::monitor::Monitor;
 use crate::monitor::MonitorHandle;
+pub use crate::screensize::ScreenSize;
 pub use output::{
-    property::{Property, Value, Values, Range, Ranges, Supported},
+    property::{Property, Range, Ranges, Supported, Value, Values},
     Output,
 };
 
@@ -146,7 +146,7 @@ impl XHandle {
     /// xhandle.enable(dp_1)?;
     /// ```
     ///
-    pub fn enable(&mut self, output: &Output) -> Result<(), XrandrError> {
+    pub fn enable(&mut self, output: &Output, rotation: &Rotation) -> Result<(), XrandrError> {
         if output.current_mode.is_some() {
             return Ok(());
         }
@@ -163,6 +163,8 @@ impl XHandle {
         crtc.width = mode.width;
         crtc.height = mode.height;
         crtc.outputs = vec![output.xid];
+        (crtc.width, crtc.height) = crtc.rotated_size(*rotation);
+        crtc.rotation = *rotation;
 
         self.apply_new_crtcs(&mut [crtc])
     }

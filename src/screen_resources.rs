@@ -1,10 +1,10 @@
 use std::{ptr, slice};
 use x11::xrandr;
 
-use crate::XHandle;
+use crate::crtc::Crtc;
 use crate::output::Output;
 use crate::Mode;
-use crate::crtc::Crtc;
+use crate::XHandle;
 use crate::XrandrError;
 
 use crate::XId;

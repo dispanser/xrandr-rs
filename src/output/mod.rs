@@ -1,18 +1,18 @@
 pub mod property;
 
 use crate::screen_resources::ScreenResourcesHandle;
-use crate::{XHandle, XrandrError, ScreenResources};
+use crate::{ScreenResources, XHandle, XrandrError};
 use indexmap::IndexMap;
 use property::{Property, Value};
+#[cfg(feature = "serialize")]
+use serde::{Deserialize, Serialize};
 use std::os::raw::c_int;
 use std::{ptr, slice};
 use x11::{xlib, xrandr};
-#[cfg(feature = "serialize")]
-use serde::{Deserialize, Serialize};
 
-use crate::CURRENT_TIME;
-use crate::XTime;
 use crate::XId;
+use crate::XTime;
+use crate::CURRENT_TIME;
 
 #[derive(Debug)]
 #[cfg_attr(feature = "serialize", derive(Serialize, Deserialize))]
